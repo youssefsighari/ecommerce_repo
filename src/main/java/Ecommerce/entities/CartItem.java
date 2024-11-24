@@ -13,8 +13,8 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
-    @JsonBackReference // Ajout important ici
+    @JoinColumn(name = "cart_id", nullable = false) // cart_id ne peut pas être nul
+    @JsonBackReference
     private Cart cart;
 
     @ManyToOne

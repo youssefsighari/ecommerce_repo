@@ -17,6 +17,7 @@ public class Categorie {
 
     @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Annotation pour éviter les boucles lors de la sérialisation
+    
     private List<Produit> produits;
 
     // Getters et setters

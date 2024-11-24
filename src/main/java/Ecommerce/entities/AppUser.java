@@ -21,7 +21,7 @@ public class AppUser {
     private String password;
     private String role;
 
-    // Getters and Setters
+    
 
     public Long getId() {
         return id;

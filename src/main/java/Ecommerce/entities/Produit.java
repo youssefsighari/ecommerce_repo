@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "produits")
@@ -15,23 +17,23 @@ public class Produit {
     private Long id;
 
     @Column(nullable = false)
+    @NotNull(message = "Le nom du produit est obligatoire.")
     private String name;
 
     @Column(nullable = false)
+    @Positive(message = "Le prix doit être supérieur à 0.")
     private double price;
 
     @ManyToOne
     @JoinColumn(name = "categorie_id", nullable = false)
-    @JsonIgnore // Empêche les conflits de sérialisation/désérialisation
+    @NotNull(message = "La catégorie est obligatoire.")
+    @JsonBackReference
     private Categorie categorie;
 
 
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore // Évitez les conflits de sérialisation/désérialisation
+    @JsonIgnore
     private List<CartItem> cartItems;
-
-
-    // Getters et setters
     public Long getId() {
         return id;
     }

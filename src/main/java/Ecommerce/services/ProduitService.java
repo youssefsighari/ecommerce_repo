@@ -1,6 +1,7 @@
 package Ecommerce.services;
 
 import Ecommerce.entities.Produit;
+import Ecommerce.dto.ProduitDTO;
 import Ecommerce.entities.Categorie;
 import Ecommerce.repository.ProduitRepository;
 import Ecommerce.repository.CategorieRepository;
@@ -30,31 +31,45 @@ public class ProduitService {
                 .orElseThrow(() -> new RuntimeException("Produit not found with id " + id));
     }
 
-    public Produit createProduit(Produit produit) {
-        // Vérifiez si la catégorie existe
-        Categorie categorie = categorieRepository.findById(produit.getCategorie().getId())
-                .orElseThrow(() -> new RuntimeException("Categorie not found with ID: " + produit.getCategorie().getId()));
-        
-        // Associez la catégorie au produit
+    public Produit createProduit(ProduitDTO produitDTO) {
+        // Vérifiez si l'ID de la catégorie est défini
+        if (produitDTO.getCategorieId() == null) {
+            throw new RuntimeException("La catégorie est obligatoire et doit contenir un ID valide.");
+        }
+
+        // Vérifiez si la catégorie existe dans la base de données
+        Categorie categorie = categorieRepository.findById(produitDTO.getCategorieId())
+                .orElseThrow(() -> new RuntimeException("Categorie not found with ID: " + produitDTO.getCategorieId()));
+
+        // Créez un nouvel objet Produit à partir du DTO
+        Produit produit = new Produit();
+        produit.setName(produitDTO.getName());
+        produit.setPrice(produitDTO.getPrice());
         produit.setCategorie(categorie);
-        
-        // Sauvegardez le produit
+
+        // Sauvegardez le produit dans le dépôt
         return produitRepository.save(produit);
     }
 
 
-    public Produit updateProduit(Long id, Produit produitDetails) {
-        Produit produit = getProduitById(id);
 
-        produit.setName(produitDetails.getName());
-        produit.setPrice(produitDetails.getPrice());
 
-        Categorie categorie = categorieRepository.findById(produitDetails.getCategorie().getId())
-                .orElseThrow(() -> new RuntimeException("Categorie not found with id " + produitDetails.getCategorie().getId()));
+    public Produit updateProduit(Long id, ProduitDTO produitDTO) {
+        Produit produit = produitRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produit not found with ID: " + id));
+
+        // Mettre à jour les champs
+        produit.setName(produitDTO.getName());
+        produit.setPrice(produitDTO.getPrice());
+
+        // Vérifier si la catégorie existe
+        Categorie categorie = categorieRepository.findById(produitDTO.getCategorieId())
+                .orElseThrow(() -> new RuntimeException("Categorie not found with ID: " + produitDTO.getCategorieId()));
         produit.setCategorie(categorie);
 
-        return produitRepository.save(produit); 
+        return produitRepository.save(produit);
     }
+
 
     public void deleteProduit(Long id) {
         Produit produit = getProduitById(id);

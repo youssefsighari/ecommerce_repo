@@ -17,8 +17,9 @@ public class Cart {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user; // L'utilisateur auquel appartient le panier
+    @JoinColumn(name = "user_id", nullable = false) // La colonne user_id ne peut pas être nulle
+    private AppUser user;
+ // L'utilisateur auquel appartient le panier
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

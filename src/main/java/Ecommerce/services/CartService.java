@@ -61,11 +61,15 @@ public class CartService {
         } else {
             // Ajouter un nouveau produit dans le panier
             CartItem newItem = new CartItem();
-           
             newItem.setProduit(produit);
             newItem.setQuantity(quantity);
+
+            // **Ajout de cette ligne : lier le CartItem au Cart**
+            newItem.setCart(cart);
+
             cartItemRepository.save(newItem);
         }
+
 
         return cart;
     }
