@@ -8,26 +8,22 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "cart_items")
 public class CartItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @JoinColumn(name = "cart_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    @JsonBackReference // Ajout important ici
     private Cart cart;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "produit_id", nullable = false)
     private Produit produit;
 
-    @Column(nullable = false)
-    private int quantity; // Quantité de ce produit dans le panier
+    private int quantity;
 
-    // Getters et Setters
+    
     public Long getId() {
         return id;
     }

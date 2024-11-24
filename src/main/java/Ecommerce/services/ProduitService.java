@@ -31,12 +31,17 @@ public class ProduitService {
     }
 
     public Produit createProduit(Produit produit) {
+        // Vérifiez si la catégorie existe
         Categorie categorie = categorieRepository.findById(produit.getCategorie().getId())
-                .orElseThrow(() -> new RuntimeException("Categorie not found with id " + produit.getCategorie().getId()));
-
+                .orElseThrow(() -> new RuntimeException("Categorie not found with ID: " + produit.getCategorie().getId()));
+        
+        // Associez la catégorie au produit
         produit.setCategorie(categorie);
+        
+        // Sauvegardez le produit
         return produitRepository.save(produit);
     }
+
 
     public Produit updateProduit(Long id, Produit produitDetails) {
         Produit produit = getProduitById(id);
@@ -48,14 +53,16 @@ public class ProduitService {
                 .orElseThrow(() -> new RuntimeException("Categorie not found with id " + produitDetails.getCategorie().getId()));
         produit.setCategorie(categorie);
 
-        return produitRepository.save(produit);
+        return produitRepository.save(produit); 
     }
 
     public void deleteProduit(Long id) {
-        if (!produitRepository.existsById(id)) {
-            throw new RuntimeException("Produit not found with ID: " + id);
-        }
-        produitRepository.deleteById(id);
+        Produit produit = getProduitById(id);
+
+        // Supprimer les relations avec CartItem (si cascade non activée)
+        produit.getCartItems().clear();
+
+        produitRepository.delete(produit);
     }
     
     public void deleteAllProduits() {

@@ -53,7 +53,8 @@ public class WebSecurityConfigurations {
             // Autorisation pour tout utilisateur authentifié
             .requestMatchers("/admin/produits/deleteAll").hasRole("ADMIN")
             
-            .requestMatchers("/cart/**").permitAll()
+            .requestMatchers("/cart/**").hasRole("USER")
+
             
 
 

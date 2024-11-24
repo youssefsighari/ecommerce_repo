@@ -36,11 +36,13 @@ public class UserServiceImpl implements UserDetailsService {
 	            });
 	    System.out.println("appuser found: " + appuser.getEmail());
 	    
+	    // Ajoutez seulement une fois "ROLE_"
 	    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-	    authorities.add(new SimpleGrantedAuthority(appuser.getRole())); // Ex: ROLE_ADMIN ou ROLE_USER
+	    authorities.add(new SimpleGrantedAuthority("ROLE_" + appuser.getRole().toUpperCase())); // Exemple : ROLE_USER
 	    
 	    return new User(appuser.getEmail(), appuser.getPassword(), authorities);
 	}
+
 
 
 	public AppUser getUserByEmail(String email) {

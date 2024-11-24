@@ -1,7 +1,10 @@
 package Ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference; // Import pour éviter les boucles
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "produits")
@@ -19,8 +22,14 @@ public class Produit {
 
     @ManyToOne
     @JoinColumn(name = "categorie_id", nullable = false)
-    @JsonBackReference // Annotation pour empêcher la sérialisation inverse
+    @JsonIgnore // Empêche les conflits de sérialisation/désérialisation
     private Categorie categorie;
+
+
+    @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Évitez les conflits de sérialisation/désérialisation
+    private List<CartItem> cartItems;
+
 
     // Getters et setters
     public Long getId() {
@@ -53,5 +62,13 @@ public class Produit {
 
     public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }
